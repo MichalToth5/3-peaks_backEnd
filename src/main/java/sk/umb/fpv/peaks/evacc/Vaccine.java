@@ -1,11 +1,15 @@
 package sk.umb.fpv.peaks.evacc;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Vaccine {
 
     /*atributy triedy*/
+    @Id
+    @GeneratedValue
     private long id;
     private String name;
     private String type;

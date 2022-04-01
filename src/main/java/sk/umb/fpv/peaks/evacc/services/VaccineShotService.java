@@ -1,10 +1,11 @@
 package sk.umb.fpv.peaks.evacc.services;
 
 import org.springframework.stereotype.Service;
+import sk.umb.fpv.peaks.evacc.Patient;
+import sk.umb.fpv.peaks.evacc.Vaccine;
 import sk.umb.fpv.peaks.evacc.VaccineShot;
 import sk.umb.fpv.peaks.evacc.repositories.VaccineShotRepository;
 
-import java.awt.desktop.OpenFilesEvent;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +18,13 @@ public class VaccineShotService {
         this.repository = repository;
     }
     /*vytvorenie zaznamu ockovania*/
-    public VaccineShot addVaccineShot(long idPatient,
-                                      long idVaccine,
+    public VaccineShot addVaccineShot(Patient patient,
+                                      Vaccine vaccine,
                                       Date dateOfShot,
                                       int shotNumber,
                                       String batch,
                                       String doctor){
-        VaccineShot vaccineShot = new VaccineShot(idPatient, idVaccine, dateOfShot, shotNumber, batch, doctor);
+        VaccineShot vaccineShot = new VaccineShot(patient, vaccine, dateOfShot, shotNumber, batch, doctor);
         return repository.save(vaccineShot);
     }
     /*vsetky zaznamy ockovani*/
@@ -39,8 +40,8 @@ public class VaccineShotService {
     public VaccineShot updateVaccineShotById(long shotId, VaccineShot newShot){
         VaccineShot vaccineShot = this.getVaccineShotById(shotId);
         if(vaccineShot != null){
-            vaccineShot.setIdVaccine(newShot.getIdVaccine());
-            vaccineShot.setIdPatient(newShot.getIdPatient());
+            vaccineShot.setVaccine(newShot.getVaccine());
+            vaccineShot.setPatient(newShot.getPatient());
             vaccineShot.setDateOfShot(newShot.getDateOfShot());
             vaccineShot.setShotNumber(newShot.getShotNumber());
             vaccineShot.setBatch(newShot.getBatch());

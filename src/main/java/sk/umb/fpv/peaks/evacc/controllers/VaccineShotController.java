@@ -3,6 +3,8 @@ package sk.umb.fpv.peaks.evacc.controllers;
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.DTOs.VaccineShotDTO;
 import sk.umb.fpv.peaks.evacc.VaccineShot;
+import sk.umb.fpv.peaks.evacc.services.PatientService;
+import sk.umb.fpv.peaks.evacc.services.VaccineService;
 import sk.umb.fpv.peaks.evacc.services.VaccineShotService;
 
 import java.util.ArrayList;
@@ -12,15 +14,19 @@ import java.util.List;
 public class VaccineShotController {
 
     private VaccineShotService service;
-    public VaccineShotController(VaccineShotService service) {
+    private VaccineService vaccineService;
+    private PatientService patientService;
+    public VaccineShotController(VaccineShotService service, VaccineService vaccineService, PatientService patientService) {
         this.service = service;
+        this.vaccineService = vaccineService;
+        this.patientService = patientService;
     }
 
     @PostMapping("/api/shot")
     public VaccineShotDTO addShot(@RequestBody VaccineShotDTO vaccineShotDTO){
         VaccineShot vaccineShot = service.addVaccineShot(
-                vaccineShotDTO.idPatient,
-                vaccineShotDTO.idVaccine,
+                patientService.getPatientById(vaccineShotDTO.idPatient),
+                vaccineService.getVaccineById(vaccineShotDTO.idVaccine),
                 vaccineShotDTO.dateOfShot,
                 vaccineShotDTO.shotNumber,
                 vaccineShotDTO.batch,
@@ -37,8 +43,8 @@ public class VaccineShotController {
         for (VaccineShot s : shots){
             VaccineShotDTO vaccineShotDTO = new VaccineShotDTO();
             vaccineShotDTO.id = s.getId();
-            vaccineShotDTO.idPatient = s.getIdPatient();
-            vaccineShotDTO.idVaccine = s.getIdVaccine();
+            vaccineShotDTO.idPatient = s.getPatient().getId();
+            vaccineShotDTO.idVaccine = s.getVaccine().getId();
             vaccineShotDTO.dateOfShot = s.getDateOfShot();
             vaccineShotDTO.shotNumber = s.getShotNumber();
             vaccineShotDTO.batch = s.getBatch();
@@ -59,8 +65,8 @@ public class VaccineShotController {
     @PutMapping("/api/shot/{shotId}")
     public VaccineShotDTO updateShotById(@PathVariable long shotId, @RequestBody VaccineShotDTO newShotDTO){
         VaccineShot vaccineShot = service.getVaccineShotById(shotId);
-        vaccineShot.setIdPatient(newShotDTO.idPatient);
-        vaccineShot.setIdVaccine(newShotDTO.idVaccine);
+        vaccineShot.setVaccine(vaccineService.getVaccineById(newShotDTO.idVaccine));
+        vaccineShot.setPatient(patientService.getPatientById(newShotDTO.idPatient));
         vaccineShot.setDateOfShot(newShotDTO.dateOfShot);
         vaccineShot.setShotNumber(newShotDTO.shotNumber);
         vaccineShot.setBatch(newShotDTO.batch);

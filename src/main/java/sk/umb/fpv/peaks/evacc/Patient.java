@@ -1,11 +1,15 @@
 package sk.umb.fpv.peaks.evacc;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 @Entity
 public class Patient {
 
     /*atributy triedy*/
+    @Id
+    @GeneratedValue
     private long id;
     private String firstName;
     private String lastName;
