@@ -1,5 +1,8 @@
 package sk.umb.fpv.peaks.evacc;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Vaccine {
 
     /*atributy triedy*/
@@ -10,7 +13,7 @@ public class Vaccine {
     private int nexShotInDays;
     private int minAge;
     private int maxAge;
-
+    /*konstruktor*/
     public Vaccine(
                    String name,
                    String type,
@@ -25,7 +28,6 @@ public class Vaccine {
         this.minAge = minAge;
         this.maxAge = maxAge;
     }
-
     /*getters/setters*/
     public long getId() {
         return id;

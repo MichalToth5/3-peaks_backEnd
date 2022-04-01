@@ -1,7 +1,8 @@
 package sk.umb.fpv.peaks.evacc;
 
+import javax.persistence.Entity;
 import java.util.Date;
-
+@Entity
 public class VaccineShot {
 
     /*atributy triedy*/
@@ -12,8 +13,7 @@ public class VaccineShot {
     private int shotNumber;
     private String batch;
     private String doctor;
-
-
+    /*konstruktor*/
     public VaccineShot(long idPatient,
                        long idVaccine,
                        Date dateOfShot,
@@ -27,7 +27,6 @@ public class VaccineShot {
         this.batch = batch;
         this.doctor = doctor;
     }
-
     /*getters/setters*/
     public long getId() {
         return id;

@@ -1,7 +1,8 @@
 package sk.umb.fpv.peaks.evacc;
 
+import javax.persistence.Entity;
 import java.util.Date;
-
+@Entity
 public class Patient {
 
     /*atributy triedy*/
@@ -19,7 +20,7 @@ public class Patient {
     private String postCode;
     private String city;
     private String country;
-
+    /*konstruktor*/
     public Patient(String firstName,
                    String lastName,
                    String idNumber,
@@ -47,7 +48,6 @@ public class Patient {
         this.city = city;
         this.country = counrty;
     }
-
     /*getters/setters*/
     public long getId() {
         return id;
