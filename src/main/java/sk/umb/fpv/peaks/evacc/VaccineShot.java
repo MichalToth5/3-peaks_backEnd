@@ -11,8 +11,22 @@ public class VaccineShot {
     private Date dateOfShot;
     private int shotNumber;
     private String batch;
-    private String doctorFirstName;
-    private String doctorLastName;
+    private String doctor;
+
+
+    public VaccineShot(long idPatient,
+                       long idVaccine,
+                       Date dateOfShot,
+                       int shotNumber,
+                       String batch,
+                       String doctor) {
+        this.idPatient = idPatient;
+        this.idVaccine = idVaccine;
+        this.dateOfShot = dateOfShot;
+        this.shotNumber = shotNumber;
+        this.batch = batch;
+        this.doctor = doctor;
+    }
 
     /*getters/setters*/
     public long getId() {
@@ -51,16 +65,10 @@ public class VaccineShot {
     public void setBatch(String batch) {
         this.batch = batch;
     }
-    public String getDoctorFirstName() {
-        return doctorFirstName;
+    public String getDoctor() {
+        return doctor;
     }
-    public void setDoctorFirstName(String doctorFirstName) {
-        this.doctorFirstName = doctorFirstName;
-    }
-    public String getDoctorLastName() {
-        return doctorLastName;
-    }
-    public void setDoctorLastName(String doctorLastName) {
-        this.doctorLastName = doctorLastName;
+    public void setDoctor(String doctor) {
+        this.doctor = doctor;
     }
 }

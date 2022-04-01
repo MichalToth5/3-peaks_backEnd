@@ -11,6 +11,21 @@ public class Vaccine {
     private int minAge;
     private int maxAge;
 
+    public Vaccine(
+                   String name,
+                   String type,
+                   String manufacturer,
+                   int nexShotInDays,
+                   int minAge,
+                   int maxAge) {
+        this.name = name;
+        this.type = type;
+        this.manufacturer = manufacturer;
+        this.nexShotInDays = nexShotInDays;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+    }
+
     /*getters/setters*/
     public long getId() {
         return id;

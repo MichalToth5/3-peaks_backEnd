@@ -18,7 +18,35 @@ public class Patient {
     private String houseNumber;
     private String postCode;
     private String city;
-    private String counrty;
+    private String country;
+
+    public Patient(String firstName,
+                   String lastName,
+                   String idNumber,
+                   Date dateOfBirth,
+                   String sex,
+                   String telephoneNumber,
+                   String emailAddrs,
+                   String insurance,
+                   String street,
+                   String houseNumber,
+                   String postCode,
+                   String city,
+                   String counrty) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.idNumber = idNumber;
+        this.dateOfBirth = dateOfBirth;
+        this.sex = sex;
+        this.telephoneNumber = telephoneNumber;
+        this.emailAddrs = emailAddrs;
+        this.insurance = insurance;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.postCode = postCode;
+        this.city = city;
+        this.country = counrty;
+    }
 
     /*getters/setters*/
     public long getId() {
@@ -99,10 +127,10 @@ public class Patient {
     public void setCity(String city) {
         this.city = city;
     }
-    public String getCounrty() {
-        return counrty;
+    public String getCountry() {
+        return country;
     }
-    public void setCounrty(String counrty) {
-        this.counrty = counrty;
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
