@@ -5,7 +5,13 @@ import sk.umb.fpv.peaks.evacc.DTOs.PatientDTO;
 import sk.umb.fpv.peaks.evacc.Patient;
 import sk.umb.fpv.peaks.evacc.services.PatientService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,11 +24,15 @@ public class PatientController {
 
     @PostMapping("/api/patient")
     public PatientDTO addPatient(@RequestBody PatientDTO patientDTO){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.uuuu");
+        LocalDate localDate = LocalDate.parse(patientDTO.dateOfBirth,formatter);
+        ZoneId defaultZone = ZoneId.systemDefault();
+        Date date = Date.from(localDate.atStartOfDay(defaultZone).toInstant());
         Patient patient = service.addPatient(
                 patientDTO.firstName,
                 patientDTO.lastName,
                 patientDTO.idNumber,
-                patientDTO.dateOfBirth,
+                date,
                 patientDTO.sex,
                 patientDTO.telephoneNumber,
                 patientDTO.emailAddrs,
@@ -31,7 +41,7 @@ public class PatientController {
                 patientDTO.houseNumber,
                 patientDTO.postCode,
                 patientDTO.city,
-                patientDTO.counrty
+                patientDTO.country
         );
         patientDTO.id = patient.getId();
         return patientDTO;
@@ -42,12 +52,13 @@ public class PatientController {
         List<PatientDTO> patientDTOList = new ArrayList<>();
         List<Patient> patients = service.getPatients();
         for (Patient p : patients){
+            DateFormat formatter = new SimpleDateFormat("d.M.uuuu");
             PatientDTO patientDTO = new PatientDTO();
             patientDTO.id = p.getId();
             patientDTO.firstName = p.getFirstName();
             patientDTO.lastName= p.getLastName();
             patientDTO.idNumber = p.getIdNumber();
-            patientDTO.dateOfBirth = p.getDateOfBirth();
+            patientDTO.dateOfBirth = formatter.format(p.getDateOfBirth());
             patientDTO.sex = p.getSex();
             patientDTO.telephoneNumber = p.getTelephoneNumber();
             patientDTO.emailAddrs = p.getEmailAddrs();
@@ -56,7 +67,7 @@ public class PatientController {
             patientDTO.houseNumber = p.getHouseNumber();
             patientDTO.postCode = p.getPostCode();
             patientDTO.city = p.getCity();
-            patientDTO.counrty = p.getCountry();
+            patientDTO.country = p.getCountry();
             patientDTOList.add(patientDTO);
         }
         return patientDTOList;
@@ -73,10 +84,16 @@ public class PatientController {
     @PutMapping("/api/patient/{patientId}")
     public PatientDTO updatePatientById(@PathVariable long patientId, @RequestBody  PatientDTO newPatientDTO){
         Patient patient = service.getPatientById(patientId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.uuuu");
+        LocalDate localDate = LocalDate.parse(newPatientDTO.dateOfBirth,formatter);
+        ZoneId defaultZone = ZoneId.systemDefault();
+        Date date = Date.from(localDate.atStartOfDay(defaultZone).toInstant());
+
         patient.setFirstName(newPatientDTO.firstName);
         patient.setLastName(newPatientDTO.lastName);
         patient.setIdNumber(newPatientDTO.idNumber);
-        patient.setDateOfBirth(newPatientDTO.dateOfBirth);
+        patient.setDateOfBirth(date);
         patient.setSex(newPatientDTO.sex);
         patient.setTelephoneNumber(newPatientDTO.telephoneNumber);
         patient.setEmailAddrs(newPatientDTO.emailAddrs);
@@ -85,7 +102,7 @@ public class PatientController {
         patient.setHouseNumber(newPatientDTO.houseNumber);
         patient.setPostCode(newPatientDTO.postCode);
         patient.setCity(newPatientDTO.city);
-        patient.setCountry(newPatientDTO.counrty);
+        patient.setCountry(newPatientDTO.country);
         service.updatePatientById(patientId, patient);
         return newPatientDTO;
     }

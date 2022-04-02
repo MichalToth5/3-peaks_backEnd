@@ -7,7 +7,7 @@ public class PatientDTO {
     public String firstName;
     public String lastName;
     public String idNumber; //rodne cislo
-    public Date dateOfBirth;
+    public String dateOfBirth;
     public String sex;
     public String telephoneNumber;
     public String emailAddrs;
@@ -16,5 +16,5 @@ public class PatientDTO {
     public String houseNumber;
     public String postCode;
     public String city;
-    public String counrty;
+    public String country;
 }

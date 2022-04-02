@@ -25,6 +25,10 @@ public class Patient {
     private String city;
     private String country;
     /*konstruktor*/
+
+    public Patient() {
+    }
+
     public Patient(String firstName,
                    String lastName,
                    String idNumber,
