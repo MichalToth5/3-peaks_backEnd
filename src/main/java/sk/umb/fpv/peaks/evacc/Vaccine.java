@@ -32,6 +32,10 @@ public class Vaccine {
         this.minAge = minAge;
         this.maxAge = maxAge;
     }
+
+    public Vaccine() {
+    }
+
     /*getters/setters*/
     public long getId() {
         return id;
