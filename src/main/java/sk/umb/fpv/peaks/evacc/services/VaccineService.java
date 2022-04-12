@@ -40,7 +40,7 @@ public class VaccineService {
             vaccine.setName(newVaccine.getName());
             vaccine.setType(newVaccine.getType());
             vaccine.setManufacturer(newVaccine.getManufacturer());
-            vaccine.setNexShotInDays(newVaccine.getNexShotInDays());
+            vaccine.setNextShotInDays(newVaccine.getNextShotInDays());
             vaccine.setMinAge(newVaccine.getMinAge());
             vaccine.setMaxAge(newVaccine.getMaxAge());
             return repository.save(vaccine);

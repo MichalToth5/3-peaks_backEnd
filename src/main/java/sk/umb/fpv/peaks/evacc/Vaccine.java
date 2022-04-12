@@ -14,7 +14,7 @@ public class Vaccine {
     private String name;
     private String type;
     private String manufacturer;
-    private int nexShotInDays;
+    private int nextShotInDays;
     private int minAge;
     private int maxAge;
     /*konstruktor*/
@@ -28,7 +28,7 @@ public class Vaccine {
         this.name = name;
         this.type = type;
         this.manufacturer = manufacturer;
-        this.nexShotInDays = nexShotInDays;
+        this.nextShotInDays = nexShotInDays;
         this.minAge = minAge;
         this.maxAge = maxAge;
     }
@@ -61,11 +61,11 @@ public class Vaccine {
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
-    public int getNexShotInDays() {
-        return nexShotInDays;
+    public int getNextShotInDays() {
+        return nextShotInDays;
     }
-    public void setNexShotInDays(int nexShotInDays) {
-        this.nexShotInDays = nexShotInDays;
+    public void setNextShotInDays(int nextShotInDays) {
+        this.nextShotInDays = nextShotInDays;
     }
     public int getMinAge() {
         return minAge;

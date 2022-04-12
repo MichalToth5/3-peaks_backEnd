@@ -74,10 +74,24 @@ public class PatientController {
     }
 
     @GetMapping("/api/patient/{patientId}")
-    public PatientDTO getPatientById(@RequestParam long patientId){
+    public PatientDTO getPatientById(@PathVariable long patientId){
+        DateFormat formatter = new SimpleDateFormat("d.M.uuuu");
         PatientDTO patientDTO = new PatientDTO();
         Patient patient = service.getPatientById(patientId);
         patientDTO.id = patient.getId();
+        patientDTO.firstName = patient.getFirstName();
+        patientDTO.lastName = patient.getLastName();
+        patientDTO.idNumber = patient.getIdNumber();
+        patientDTO.dateOfBirth =formatter.format(patient.getDateOfBirth());
+        patientDTO.sex = patient.getSex();
+        patientDTO.telephoneNumber = patient.getTelephoneNumber();
+        patientDTO.emailAddrs = patient.getEmailAddrs();
+        patientDTO.insurance = patient.getInsurance();
+        patientDTO.street = patient.getStreet();
+        patientDTO.houseNumber = patient.getHouseNumber();
+        patientDTO.postCode = patient.getPostCode();
+        patientDTO.city = patient.getCity();
+        patientDTO.country= patient.getCountry();
         return patientDTO;
     }
 
@@ -108,8 +122,27 @@ public class PatientController {
     }
 
     @DeleteMapping("/api/patient/{patientId}")
-    public  void deletePatientById(long patientId){
+    public  void deletePatientById(@PathVariable long patientId){
         service.deletePatientById(patientId);
     }
 
+    @GetMapping("/api/patient/search")
+    public List<PatientDTO> searchPatients(@RequestParam String search){
+        List<Patient> patientList = service.searchPatients(search);
+        List<PatientDTO> patientDTOList = new ArrayList<>();
+        for(Patient p : patientList){
+            DateFormat formatter = new SimpleDateFormat("d.M.uuuu");
+            PatientDTO patientDTO = new PatientDTO();
+            patientDTO.firstName = p.getFirstName();
+            patientDTO.lastName= p.getLastName();
+            patientDTO.idNumber = p.getIdNumber();
+            patientDTO.dateOfBirth = formatter.format(p.getDateOfBirth());
+            patientDTO.street = p.getStreet();
+            patientDTO.postCode = p.getPostCode();
+            patientDTO.city = p.getCity();
+            patientDTO.country = p.getCountry();
+            patientDTOList.add(patientDTO);
+        }
+        return patientDTOList;
+    }
 }

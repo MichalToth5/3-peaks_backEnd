@@ -68,5 +68,12 @@ public class PatientService {
     public void deletePatientById(long patientId){
         repository.deleteById(patientId);
     }
+
+    public List<Patient> searchPatients(String search){
+        if(search != null){
+            return repository.searchIgnoreCase(search);
+        }
+        return repository.findAll();
+    }
 }
 

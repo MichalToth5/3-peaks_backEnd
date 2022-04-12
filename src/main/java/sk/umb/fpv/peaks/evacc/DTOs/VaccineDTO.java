@@ -5,7 +5,7 @@ public class VaccineDTO {
     public String name;
     public String type;
     public String manufacturer;
-    public int nexShotInDays;
+    public int nextShotInDays;
     public int minAge;
     public int maxAge;
 }

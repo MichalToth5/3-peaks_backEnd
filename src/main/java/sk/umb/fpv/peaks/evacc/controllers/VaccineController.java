@@ -22,7 +22,7 @@ public class VaccineController {
                 vaccineDTO.name,
                 vaccineDTO.type,
                 vaccineDTO.manufacturer,
-                vaccineDTO.nexShotInDays,
+                vaccineDTO.nextShotInDays,
                 vaccineDTO.minAge,
                 vaccineDTO.maxAge
         );
@@ -36,10 +36,11 @@ public class VaccineController {
         List<Vaccine> vaccines = service.getVaccines();
         for(Vaccine v : vaccines){
             VaccineDTO vaccineDTO = new VaccineDTO();
+            vaccineDTO.id = v.getId();
             vaccineDTO.name = v.getName();
             vaccineDTO.type = v.getType();
             vaccineDTO.manufacturer = v.getManufacturer();
-            vaccineDTO.nexShotInDays = v.getNexShotInDays();
+            vaccineDTO.nextShotInDays = v.getNextShotInDays();
             vaccineDTO.minAge = v.getMinAge();
             vaccineDTO.maxAge = v.getMaxAge();
             vaccineDTOList.add(vaccineDTO);
@@ -48,20 +49,26 @@ public class VaccineController {
     }
 
     @GetMapping("/api/vaccine/{vaccineId}")
-    public VaccineDTO getVaccineById(@RequestParam long vaccineId){
+    public VaccineDTO getVaccineById(@PathVariable long vaccineId){
         VaccineDTO vaccineDTO = new VaccineDTO();
         Vaccine vaccine = service.getVaccineById(vaccineId);
         vaccineDTO.id = vaccine.getId();
+        vaccineDTO.name = vaccine.getName();
+        vaccineDTO.type = vaccine.getType();
+        vaccineDTO.manufacturer = vaccine.getManufacturer();
+        vaccineDTO.nextShotInDays = vaccine.getNextShotInDays();
+        vaccineDTO.minAge =vaccine.getMinAge();
+        vaccineDTO.maxAge =vaccine.getMaxAge();
         return vaccineDTO;
     }
 
     @PutMapping("/api/vaccine/{vaccineId}")
-    public VaccineDTO updateVaccineById(@RequestParam  long vaccineId, @RequestBody VaccineDTO newVaccineDTO){
+    public VaccineDTO updateVaccineById(@PathVariable  long vaccineId, @RequestBody VaccineDTO newVaccineDTO){
         Vaccine vaccine = service.getVaccineById(vaccineId);
         vaccine.setName(newVaccineDTO.name);
         vaccine.setType(newVaccineDTO.type);
         vaccine.setManufacturer(newVaccineDTO.manufacturer);
-        vaccine.setNexShotInDays(newVaccineDTO.nexShotInDays);
+        vaccine.setNextShotInDays(newVaccineDTO.nextShotInDays);
         vaccine.setMinAge(newVaccineDTO.minAge);
         vaccine.setMaxAge(newVaccineDTO.maxAge);
         service.updateVaccineById(vaccineId, vaccine);
@@ -69,7 +76,7 @@ public class VaccineController {
     }
 
     @DeleteMapping("/api/vaccine/{vaccineId}")
-    public void deleteVaccineById(long vaccineId){
+    public void deleteVaccineById(@PathVariable long vaccineId){
         service.deleteVaccineById(vaccineId);
     }
 }
