@@ -1,9 +1,6 @@
 package sk.umb.fpv.peaks.evacc;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Date;
 @Entity
 public class VaccineShot {
@@ -12,15 +9,18 @@ public class VaccineShot {
     @Id
     @GeneratedValue
     private long id;
-    @OneToOne
+    @ManyToOne
     private Patient patient;
-    @OneToOne
+    @ManyToOne
     private Vaccine vaccine;
     private Date dateOfShot;
     private int shotNumber;
     private String batch;
     private String doctor;
     /*konstruktor*/
+
+    public VaccineShot() {
+    }
 
     public VaccineShot(Patient idPatient, Vaccine idVaccine, Date dateOfShot, int shotNumber, String batch, String doctor) {
         this.patient = idPatient;

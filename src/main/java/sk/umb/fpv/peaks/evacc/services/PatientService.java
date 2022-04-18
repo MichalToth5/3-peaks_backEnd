@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import sk.umb.fpv.peaks.evacc.Patient;
 import sk.umb.fpv.peaks.evacc.repositories.PatientRepository;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class PatientService {
         Optional<Patient> optionalPatient = repository.findById(patientId);
         return optionalPatient.orElse(null);
     }
+    @Transactional
     /*update pacienta*/
     public Patient updatePatientById(long patientId, Patient newPatient){
         Patient patient = this.getPatientById(patientId);
@@ -64,6 +66,7 @@ public class PatientService {
         }
         return null;
     }
+    @Transactional
     /*vymazanie pacienta*/
     public void deletePatientById(long patientId){
         repository.deleteById(patientId);

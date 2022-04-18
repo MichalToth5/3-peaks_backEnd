@@ -2,9 +2,12 @@ package sk.umb.fpv.peaks.evacc.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.DTOs.PatientDTO;
+import sk.umb.fpv.peaks.evacc.DTOs.VaccineShotDTO;
 import sk.umb.fpv.peaks.evacc.Patient;
+import sk.umb.fpv.peaks.evacc.VaccineShot;
 import sk.umb.fpv.peaks.evacc.services.PatientService;
 
+import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -92,9 +95,21 @@ public class PatientController {
         patientDTO.postCode = patient.getPostCode();
         patientDTO.city = patient.getCity();
         patientDTO.country= patient.getCountry();
+        patientDTO.vaccines = new ArrayList<VaccineShotDTO>();
+        for (VaccineShot s : patient.getShots()) {
+            VaccineShotDTO vaccineShotDTO = new VaccineShotDTO();
+            vaccineShotDTO.id = s.getId();
+            vaccineShotDTO.idPatient = s.getPatient().getId();
+            vaccineShotDTO.idVaccine = s.getVaccine().getId();
+            vaccineShotDTO.dateOfShot = s.getDateOfShot();
+            vaccineShotDTO.shotNumber = s.getShotNumber();
+            vaccineShotDTO.batch = s.getBatch();
+            vaccineShotDTO.doctor = s.getDoctor();
+            patientDTO.vaccines.add(vaccineShotDTO);
+        }
         return patientDTO;
     }
-
+    @Transactional
     @PutMapping("/api/patient/{patientId}")
     public PatientDTO updatePatientById(@PathVariable long patientId, @RequestBody  PatientDTO newPatientDTO){
         Patient patient = service.getPatientById(patientId);
@@ -120,7 +135,7 @@ public class PatientController {
         service.updatePatientById(patientId, patient);
         return newPatientDTO;
     }
-
+    @Transactional
     @DeleteMapping("/api/patient/{patientId}")
     public  void deletePatientById(@PathVariable long patientId){
         service.deletePatientById(patientId);

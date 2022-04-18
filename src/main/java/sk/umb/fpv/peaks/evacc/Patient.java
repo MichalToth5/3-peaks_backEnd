@@ -1,9 +1,9 @@
 package sk.umb.fpv.peaks.evacc;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
+
 @Entity
 public class Patient {
 
@@ -14,7 +14,7 @@ public class Patient {
     private String firstName;
     private String lastName;
     private String idNumber; //rodne cislo
-    private Date  dateOfBirth;
+    private Date   dateOfBirth;
     private String sex;
     private String telephoneNumber;
     private String emailAddrs;
@@ -24,11 +24,22 @@ public class Patient {
     private String postCode;
     private String city;
     private String country;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<VaccineShot> shots;
+
+
     /*konstruktor*/
 
     public Patient() {
     }
 
+    public Set<VaccineShot> getShots() {
+        return shots;
+    }
+
+    public void setShots(Set<VaccineShot> shots) {
+        this.shots = shots;
+    }
     public Patient(String firstName,
                    String lastName,
                    String idNumber,

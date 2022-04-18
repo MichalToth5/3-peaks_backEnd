@@ -1,6 +1,8 @@
 package sk.umb.fpv.peaks.evacc.DTOs;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 public class PatientDTO {
     public long id;
@@ -17,4 +19,5 @@ public class PatientDTO {
     public String postCode;
     public String city;
     public String country;
+    public ArrayList<VaccineShotDTO> vaccines;
 }

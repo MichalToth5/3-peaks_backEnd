@@ -18,6 +18,7 @@ public class VaccineShotService {
         this.repository = repository;
     }
     /*vytvorenie zaznamu ockovania*/
+
     public VaccineShot addVaccineShot(Patient patient,
                                       Vaccine vaccine,
                                       Date dateOfShot,
