@@ -2,7 +2,9 @@ package sk.umb.fpv.peaks.evacc.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sk.umb.fpv.peaks.evacc.DTOs.NcziPatientsHospDTO;
 import sk.umb.fpv.peaks.evacc.DTOs.NcziVaccinesDTO;
+import sk.umb.fpv.peaks.evacc.DTOs.TotalPatientsInHospitalDTO;
 import sk.umb.fpv.peaks.evacc.DTOs.TotalVaccinationsDTO;
 import sk.umb.fpv.peaks.evacc.services.NcziApiService;
 
@@ -21,4 +23,11 @@ public class NcziApiController {
         totalDto.sum = dto.page.get(0).dose1_count + dto.page.get(0).dose2_count;
         return totalDto;
     }
+    /*
+    @GetMapping("/api/nczi/patients/hospital")
+    public TotalPatientsInHospitalDTO getPatientsInHospitals(){
+        NcziPatientsHospDTO dto = service.getPatientsInHospitals();
+        TotalPatientsInHospitalDTO totalDto = new TotalPatientsInHospitalDTO();
+    }
+     */
 }
