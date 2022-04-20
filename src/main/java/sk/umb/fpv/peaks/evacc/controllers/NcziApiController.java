@@ -2,10 +2,7 @@ package sk.umb.fpv.peaks.evacc.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sk.umb.fpv.peaks.evacc.DTOs.NcziPatientsDTO;
-import sk.umb.fpv.peaks.evacc.DTOs.NcziVaccinesDTO;
-import sk.umb.fpv.peaks.evacc.DTOs.TotalHospitalPatientsDTO;
-import sk.umb.fpv.peaks.evacc.DTOs.TotalVaccinationsDTO;
+import sk.umb.fpv.peaks.evacc.DTOs.*;
 import sk.umb.fpv.peaks.evacc.services.NcziApiService;
 
 @RestController
@@ -29,6 +26,14 @@ public class NcziApiController {
         NcziPatientsDTO dto = service.getHospitalPatients();
         TotalHospitalPatientsDTO totalDto = new TotalHospitalPatientsDTO();
         totalDto.sum = dto.page.get(0).confirmed_covid + dto.page.get(0).suspected_covid;
+        return totalDto;
+    }
+
+    @GetMapping("/api/nczi/ag-tests")
+    public TotalPositiveDTO getPositives(){
+        NcziPositiveDTO dto = service.getPositives();
+        TotalPositiveDTO totalDto = new TotalPositiveDTO();
+        totalDto.sum = dto.page.get(0).positives_sum;
         return totalDto;
     }
 
