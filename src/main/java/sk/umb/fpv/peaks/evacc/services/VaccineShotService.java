@@ -6,6 +6,7 @@ import sk.umb.fpv.peaks.evacc.Vaccine;
 import sk.umb.fpv.peaks.evacc.VaccineShot;
 import sk.umb.fpv.peaks.evacc.repositories.VaccineShotRepository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class VaccineShotService {
 
     public VaccineShot addVaccineShot(Patient patient,
                                       Vaccine vaccine,
-                                      Date dateOfShot,
+                                      LocalDate dateOfShot,
                                       int shotNumber,
                                       String batch,
                                       String doctor){

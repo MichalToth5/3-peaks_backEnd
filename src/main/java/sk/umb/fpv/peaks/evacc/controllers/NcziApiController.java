@@ -21,7 +21,7 @@ public class NcziApiController {
         return totalDto;
     }
 
-    @GetMapping("/api/nczi/hospital-patients")
+    @GetMapping("/api/nczi/hospital/patients")
     public TotalHospitalPatientsDTO getHospitalPatients(){
         NcziPatientsDTO dto = service.getHospitalPatients();
         TotalHospitalPatientsDTO totalDto = new TotalHospitalPatientsDTO();
@@ -29,7 +29,7 @@ public class NcziApiController {
         return totalDto;
     }
 
-    @GetMapping("/api/nczi/ag-tests")
+    @GetMapping("/api/nczi/agtests")
     public TotalPositiveDTO getPositives(){
         NcziPositiveDTO dto = service.getPositives();
         TotalPositiveDTO totalDto = new TotalPositiveDTO();

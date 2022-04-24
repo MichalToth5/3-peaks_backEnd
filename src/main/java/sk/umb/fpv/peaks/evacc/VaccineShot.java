@@ -1,6 +1,7 @@
 package sk.umb.fpv.peaks.evacc;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 @Entity
 public class VaccineShot {
@@ -13,7 +14,7 @@ public class VaccineShot {
     private Patient patient;
     @ManyToOne
     private Vaccine vaccine;
-    private Date dateOfShot;
+    private LocalDate dateOfShot;
     private int shotNumber;
     private String batch;
     private String doctor;
@@ -22,7 +23,7 @@ public class VaccineShot {
     public VaccineShot() {
     }
 
-    public VaccineShot(Patient idPatient, Vaccine idVaccine, Date dateOfShot, int shotNumber, String batch, String doctor) {
+    public VaccineShot(Patient idPatient, Vaccine idVaccine, LocalDate dateOfShot, int shotNumber, String batch, String doctor) {
         this.patient = idPatient;
         this.vaccine = idVaccine;
         this.dateOfShot = dateOfShot;
@@ -56,11 +57,11 @@ public class VaccineShot {
         this.vaccine = vaccine;
     }
 
-    public Date getDateOfShot() {
+    public LocalDate getDateOfShot() {
         return dateOfShot;
     }
 
-    public void setDateOfShot(Date dateOfShot) {
+    public void setDateOfShot(LocalDate dateOfShot) {
         this.dateOfShot = dateOfShot;
     }
 

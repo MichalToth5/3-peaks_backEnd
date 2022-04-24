@@ -1,7 +1,10 @@
 package sk.umb.fpv.peaks.evacc;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,7 +17,7 @@ public class Patient {
     private String firstName;
     private String lastName;
     private String idNumber; //rodne cislo
-    private Date   dateOfBirth;
+    private LocalDate   dateOfBirth;
     private String sex;
     private String telephoneNumber;
     private String emailAddrs;
@@ -25,7 +28,7 @@ public class Patient {
     private String city;
     private String country;
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<VaccineShot> shots;
+    private List<VaccineShot> shots;
 
 
     /*konstruktor*/
@@ -33,17 +36,17 @@ public class Patient {
     public Patient() {
     }
 
-    public Set<VaccineShot> getShots() {
+    public List<VaccineShot> getShots() {
         return shots;
     }
 
-    public void setShots(Set<VaccineShot> shots) {
+    public void setShots(List<VaccineShot> shots) {
         this.shots = shots;
     }
     public Patient(String firstName,
                    String lastName,
                    String idNumber,
-                   Date dateOfBirth,
+                   LocalDate dateOfBirth,
                    String sex,
                    String telephoneNumber,
                    String emailAddrs,
@@ -92,10 +95,10 @@ public class Patient {
     public void setIdNumber(String idNumber) {
         this.idNumber = idNumber;
     }
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
     public String getSex() {

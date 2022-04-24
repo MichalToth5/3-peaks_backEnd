@@ -5,6 +5,7 @@ import sk.umb.fpv.peaks.evacc.Patient;
 import sk.umb.fpv.peaks.evacc.repositories.PatientRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class PatientService {
     public Patient addPatient(String firstName,
                                     String lastName,
                                     String idNumber,
-                                    Date dateOfBirth,
+                                    LocalDate dateOfBirth,
                                     String sex,
                                     String telephoneNumber,
                                     String emailAddrs,

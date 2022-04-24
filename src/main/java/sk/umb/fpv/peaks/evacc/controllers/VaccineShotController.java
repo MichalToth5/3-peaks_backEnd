@@ -2,11 +2,15 @@ package sk.umb.fpv.peaks.evacc.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.DTOs.VaccineShotDTO;
+import sk.umb.fpv.peaks.evacc.EvaccApplication;
+import sk.umb.fpv.peaks.evacc.Utils;
 import sk.umb.fpv.peaks.evacc.VaccineShot;
 import sk.umb.fpv.peaks.evacc.services.PatientService;
 import sk.umb.fpv.peaks.evacc.services.VaccineService;
 import sk.umb.fpv.peaks.evacc.services.VaccineShotService;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +31,7 @@ public class VaccineShotController {
         VaccineShot vaccineShot = service.addVaccineShot(
                 patientService.getPatientById(vaccineShotDTO.idPatient),
                 vaccineService.getVaccineById(vaccineShotDTO.idVaccine),
-                vaccineShotDTO.dateOfShot,
+                LocalDate.parse(vaccineShotDTO.dateOfShot, Utils.EuropeanDateFormatter),
                 vaccineShotDTO.shotNumber,
                 vaccineShotDTO.batch,
                 vaccineShotDTO.doctor
@@ -45,7 +49,7 @@ public class VaccineShotController {
             vaccineShotDTO.id = s.getId();
             vaccineShotDTO.idPatient = s.getPatient().getId();
             vaccineShotDTO.idVaccine = s.getVaccine().getId();
-            vaccineShotDTO.dateOfShot = s.getDateOfShot();
+            vaccineShotDTO.dateOfShot = s.getDateOfShot().format(Utils.EuropeanDateFormatter);
             vaccineShotDTO.shotNumber = s.getShotNumber();
             vaccineShotDTO.batch = s.getBatch();
             vaccineShotDTO.doctor = s.getDoctor();
@@ -55,10 +59,16 @@ public class VaccineShotController {
     }
 
     @GetMapping("/api/shot/{shotId}")
-    public VaccineShotDTO getShotById(@RequestParam long shotId){
+    public VaccineShotDTO getShotById(@PathVariable long shotId){
         VaccineShotDTO vaccineShotDTO = new VaccineShotDTO();
         VaccineShot shot = service.getVaccineShotById(shotId);
         vaccineShotDTO.id = shot.getId();
+        vaccineShotDTO.idPatient = shot.getPatient().getId();
+        vaccineShotDTO.idVaccine = shot.getVaccine().getId();
+        vaccineShotDTO.dateOfShot = shot.getDateOfShot().format(Utils.EuropeanDateFormatter);
+        vaccineShotDTO.shotNumber = shot.getShotNumber();
+        vaccineShotDTO.batch = shot.getBatch();
+        vaccineShotDTO.doctor = shot.getDoctor();
         return vaccineShotDTO;
     }
 
@@ -67,7 +77,7 @@ public class VaccineShotController {
         VaccineShot vaccineShot = service.getVaccineShotById(shotId);
         vaccineShot.setVaccine(vaccineService.getVaccineById(newShotDTO.idVaccine));
         vaccineShot.setPatient(patientService.getPatientById(newShotDTO.idPatient));
-        vaccineShot.setDateOfShot(newShotDTO.dateOfShot);
+        vaccineShot.setDateOfShot(LocalDate.parse(newShotDTO.dateOfShot, Utils.EuropeanDateFormatter));
         vaccineShot.setShotNumber(newShotDTO.shotNumber);
         vaccineShot.setBatch(newShotDTO.batch);
         vaccineShot.setDoctor(newShotDTO.doctor);
@@ -76,7 +86,7 @@ public class VaccineShotController {
     }
 
     @DeleteMapping("/api/shot/{shotId}")
-    public void deleteShotById(long shotId){
+    public void deleteShotById(@PathVariable long shotId){
         service.deleteVaccineShotById(shotId);
     }
 }
