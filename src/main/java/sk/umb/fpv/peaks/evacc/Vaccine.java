@@ -16,23 +16,23 @@ public class Vaccine {
     @GeneratedValue
     private long id;
 
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "Meno je povinný údaj!")
     private String name;
 
-    @NotBlank(message = "Type is mandatory")
+    @NotBlank(message = "Typ je povinný údaj!")
     private String type;
 
-    @NotBlank(message = "Manufacturer is mandatory")
+    @NotBlank(message = "Výrobca je povinný údaj!")
     private String manufacturer;
 
-    @Min(value = 1, message = "Next shot is mandatory")
+    @NotNull(message = "Údaj nemôže byť prázdny!")
     private int nextShotInDays;
 
-    @Min(value = 1, message = "Min age is mandatory")
+    @Min(value = 1, message = "Minimálny vek je povinný údaj!")
     private int minAge;
 
-    @Min(value = 1, message = "Max age must be larger than 0")
-    @Max(value = 100, message = "Max age cannot be larger than 99")
+    @Min(value = 1, message = "Minimálny vek musí byť viac ako 0!")
+    @Max(value = 100, message = "Maximálny vek musí byť menej ako 100!")
     private int maxAge;
 
     /*konstruktory*/
