@@ -1,5 +1,6 @@
 package sk.umb.fpv.peaks.evacc.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.DTOs.PatientDTO;
 import sk.umb.fpv.peaks.evacc.DTOs.VaccineDTO;
@@ -11,14 +12,13 @@ import sk.umb.fpv.peaks.evacc.VaccineShot;
 import sk.umb.fpv.peaks.evacc.services.PatientService;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class PatientController {
@@ -102,5 +102,18 @@ public class PatientController {
             patientDTOList.add(patientDTO);
         }
         return patientDTOList;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Map<String, String> handleValidationExceptions(
+            ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach((error) -> {
+            String fieldName = error.getPropertyPath().toString();
+            String errorMessage = error.getMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
