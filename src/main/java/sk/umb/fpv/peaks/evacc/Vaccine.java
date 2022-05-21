@@ -3,6 +3,10 @@ package sk.umb.fpv.peaks.evacc;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Vaccine {
@@ -11,13 +15,27 @@ public class Vaccine {
     @Id
     @GeneratedValue
     private long id;
+
+    @NotBlank(message = "Name is mandatory")
     private String name;
+
+    @NotBlank(message = "Type is mandatory")
     private String type;
+
+    @NotBlank(message = "Manufacturer is mandatory")
     private String manufacturer;
+
+    @NotNull(message = "Cannot be null")
     private int nextShotInDays;
+
+    @Min(value = 1, message = "Min age is mandatory")
     private int minAge;
+
+    @Min(value = 1, message = "Max age must be larger than 0")
+    @Max(value = 100, message = "Max age cannot be larger than 99")
     private int maxAge;
-    /*konstruktor*/
+
+    /*konstruktory*/
     public Vaccine(
                    String name,
                    String type,
