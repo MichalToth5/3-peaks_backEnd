@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Vaccine {
 
-    /*atributy triedy*/
+    /*atribúty triedy*/
     @Id
     @GeneratedValue
     private long id;
@@ -35,7 +35,7 @@ public class Vaccine {
     @Max(value = 100, message = "Maximálny vek musí byť menej ako 100!")
     private int maxAge;
 
-    /*konstruktory*/
+    /*konštruktory*/
     public Vaccine(
                    String name,
                    String type,
