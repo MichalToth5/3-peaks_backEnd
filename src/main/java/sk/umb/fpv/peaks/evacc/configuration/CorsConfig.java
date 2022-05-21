@@ -1,4 +1,4 @@
-package sk.umb.fpv.dain142demo.config;
+package sk.umb.fpv.peaks.evacc.configuration;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +11,6 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-
-    /**
-     * Setup cors filters.
-     */
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -1,4 +1,4 @@
-package sk.umb.fpv.dain142demo.config;
+package sk.umb.fpv.peaks.evacc.configuration;
 
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.context.annotation.Bean;
