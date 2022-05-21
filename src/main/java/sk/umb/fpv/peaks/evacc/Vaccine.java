@@ -25,7 +25,7 @@ public class Vaccine {
     @NotBlank(message = "Manufacturer is mandatory")
     private String manufacturer;
 
-    @NotNull(message = "Cannot be null")
+    @Min(value = 1, message = "Next shot is mandatory")
     private int nextShotInDays;
 
     @Min(value = 1, message = "Min age is mandatory")
