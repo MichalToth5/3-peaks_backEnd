@@ -1,5 +1,6 @@
 package sk.umb.fpv.peaks.evacc.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.DTOs.VaccineShotDTO;
 import sk.umb.fpv.peaks.evacc.EvaccApplication;
@@ -9,10 +10,13 @@ import sk.umb.fpv.peaks.evacc.services.PatientService;
 import sk.umb.fpv.peaks.evacc.services.VaccineService;
 import sk.umb.fpv.peaks.evacc.services.VaccineShotService;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class VaccineShotController {
@@ -88,5 +92,18 @@ public class VaccineShotController {
     @DeleteMapping("/api/shot/{shotId}")
     public void deleteShotById(@PathVariable long shotId){
         service.deleteVaccineShotById(shotId);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Map<String, String> handleValidationExceptions(
+            ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach((error) -> {
+            String fieldName = error.getPropertyPath().toString();
+            String errorMessage = error.getMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

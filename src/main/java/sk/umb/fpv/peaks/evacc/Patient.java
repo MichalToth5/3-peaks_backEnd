@@ -34,7 +34,7 @@ public class Patient {
     @NotNull(message = "Dátum narodenia je povinný údaj!")
     private LocalDate   dateOfBirth;
 
-    @NotBlank(message = "Tel. číslo je povinný údaj!")
+    @NotBlank(message = "Pohlavie je povinný údaj!")
     private String sex;
 
     @NotBlank(message = "Tel. číslo je povinný údaj!")

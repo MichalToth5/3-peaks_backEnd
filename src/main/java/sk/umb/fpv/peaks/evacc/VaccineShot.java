@@ -1,6 +1,8 @@
 package sk.umb.fpv.peaks.evacc;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Date;
 @Entity
@@ -14,9 +16,17 @@ public class VaccineShot {
     private Patient patient;
     @ManyToOne
     private Vaccine vaccine;
+
+    @NotNull(message = "Dátum podania dávky je povinný údaj!")
     private LocalDate dateOfShot;
+
+    @NotNull(message = "Počet dávok je povinný údaj!")
     private int shotNumber;
+
+    @NotBlank(message = "Šarža je povinný údaj!")
     private String batch;
+
+    @NotBlank(message = "Doktor je povinný údaj!")
     private String doctor;
     /*konstruktor*/
 
