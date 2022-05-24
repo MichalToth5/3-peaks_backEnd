@@ -60,6 +60,7 @@ public class Patient {
 
     @NotBlank(message = "Krajina je povinný údaj!")
     private String country;
+
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<VaccineShot> shots;
 

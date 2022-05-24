@@ -34,7 +34,7 @@ public class PatientController {
                 patientDTO.firstName,
                 patientDTO.lastName,
                 patientDTO.idNumber,
-                patientDTO.dateOfBirth == null ? null: LocalDate.parse(patientDTO.dateOfBirth, Utils.EuropeanDateFormatter),
+                LocalDate.parse(patientDTO.dateOfBirth, Utils.EuropeanDateFormatter),
                 patientDTO.sex,
                 patientDTO.telephoneNumber,
                 patientDTO.emailAddrs,
