@@ -1,5 +1,8 @@
 package sk.umb.fpv.peaks.evacc.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sk.umb.fpv.peaks.evacc.Patient;
 import sk.umb.fpv.peaks.evacc.repositories.PatientRepository;
@@ -10,6 +13,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.round;
+
 @Service
 public class PatientService {
 
@@ -17,6 +23,11 @@ public class PatientService {
     public PatientService(PatientRepository repository) {
         this.repository = repository;
     }
+//for demonstrating
+    public void inportData(){
+
+    }
+
     /*vytvorenie pacienta*/
     public Patient addPatient(String firstName,
                                     String lastName,
@@ -37,8 +48,8 @@ public class PatientService {
         return repository.save(patient);
     }
     /*vsetci pacienti*/
-    public List<Patient> getPatients(){
-        return repository.findAll();
+    public Page<Patient> getPatients(int page){
+        return repository.findAll(PageRequest.of(page, 10, Sort.by("id")));
     }
     /*pacienti podla id*/
     public Patient getPatientById(long patientId){
@@ -73,11 +84,16 @@ public class PatientService {
         repository.deleteById(patientId);
     }
 
-    public List<Patient> searchPatients(String search){
+    public Iterable<Patient> searchPatients(String search){
         if(search != null){
             return repository.searchIgnoreCase(search);
         }
         return repository.findAll();
+    }
+
+    public long getPageCount(){
+        long pageCount = repository.count();
+        return round((float)pageCount / 10.0);
     }
 }
 

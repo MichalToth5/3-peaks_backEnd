@@ -1,7 +1,9 @@
 package sk.umb.fpv.peaks.evacc.controllers;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import sk.umb.fpv.peaks.evacc.DTOs.PageCountDTO;
 import sk.umb.fpv.peaks.evacc.DTOs.PatientDTO;
 import sk.umb.fpv.peaks.evacc.DTOs.VaccineDTO;
 import sk.umb.fpv.peaks.evacc.DTOs.VaccineShotDTO;
@@ -34,7 +36,7 @@ public class PatientController {
                 patientDTO.firstName,
                 patientDTO.lastName,
                 patientDTO.idNumber,
-                LocalDate.parse(patientDTO.dateOfBirth, Utils.EuropeanDateFormatter),
+                LocalDate.parse(patientDTO.dateOfBirth, Utils.MadarskyDateFormatter),
                 patientDTO.sex,
                 patientDTO.telephoneNumber,
                 patientDTO.emailAddrs,
@@ -50,9 +52,9 @@ public class PatientController {
     }
 
     @GetMapping("/api/patient")
-    public List<PatientDTO> getPatients(){
+    public Iterable<PatientDTO> getPatients(@RequestParam(defaultValue = "0") Integer page){
         List<PatientDTO> patientDTOList = new ArrayList<>();
-        List<Patient> patients = service.getPatients();
+        Page<Patient> patients = service.getPatients(page);
         for (Patient p : patients){
             PatientDTO patientDTO = new PatientDTO(p);
             patientDTOList.add(patientDTO);
@@ -74,7 +76,7 @@ public class PatientController {
         patient.setFirstName(newPatientDTO.firstName);
         patient.setLastName(newPatientDTO.lastName);
         patient.setIdNumber(newPatientDTO.idNumber);
-        patient.setDateOfBirth(LocalDate.parse(newPatientDTO.dateOfBirth, Utils.EuropeanDateFormatter));
+        patient.setDateOfBirth(LocalDate.parse(newPatientDTO.dateOfBirth, Utils.MadarskyDateFormatter));
         patient.setSex(newPatientDTO.sex);
         patient.setTelephoneNumber(newPatientDTO.telephoneNumber);
         patient.setEmailAddrs(newPatientDTO.emailAddrs);
@@ -94,8 +96,8 @@ public class PatientController {
     }
 
     @GetMapping("/api/patient/search")
-    public List<PatientDTO> searchPatients(@RequestParam String search){
-        List<Patient> patientList = service.searchPatients(search);
+    public Iterable<PatientDTO> searchPatients(@RequestParam String search){
+        Iterable<Patient> patientList = service.searchPatients(search);
         List<PatientDTO> patientDTOList = new ArrayList<>();
         for(Patient p : patientList){
             PatientDTO patientDTO = new PatientDTO(p);
@@ -115,5 +117,12 @@ public class PatientController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @GetMapping("/api/patient/pageCount")
+    public PageCountDTO getPagesCount(){
+        PageCountDTO pageCountDTO = new PageCountDTO();
+        pageCountDTO.setPageCount(service.getPageCount());
+        return pageCountDTO;
     }
 }
