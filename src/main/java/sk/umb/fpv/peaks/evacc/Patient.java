@@ -25,9 +25,9 @@ public class Patient {
     @NotBlank(message = "Priezvisko je povinný údaj!")
     private String lastName;
 
-    @Min(value = 10, message = "Rod. číslo je príliš krátke!")
-    @Max(value = 11, message = "Rod. číslo je príliš dlhé!")
     @NotBlank(message = "Rod. číslo je povinný údaj!")
+    @Size(min = 10, message = "Rod. číslo je príliš krátke!")
+    @Size(max = 12, message = "Rod. číslo je príliš dlhé!")
     private String idNumber; //rodne cislo
 
     @NotNull(message = "Dátum narodenia je povinný údaj!")
