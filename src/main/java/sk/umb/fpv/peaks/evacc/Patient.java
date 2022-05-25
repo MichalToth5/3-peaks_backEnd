@@ -9,10 +9,7 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @Entity
 public class Patient {
@@ -43,6 +40,7 @@ public class Patient {
     private String telephoneNumber;
 
     @NotBlank(message = "Email je povinný údaj!")
+    @Email(regexp = ".+[@].+[\\.].+", message = "Email nie je v správnom tvare!")
     private String emailAddrs;
 
     @NotBlank(message = "Poisťovňa je povinný údaj!")
