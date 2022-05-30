@@ -15,7 +15,7 @@ public class PatientDTO {
         this.firstName = p.getFirstName();
         this.lastName = p.getLastName();
         this.idNumber = p.getIdNumber();
-        this.dateOfBirth = p.getDateOfBirth().format(Utils.MadarskyDateFormatter);
+        this.dateOfBirth = p.getDateOfBirth().format(Utils.EuropeanDateFormatter);
         this.street = p.getStreet();
         this.postCode = p.getPostCode();
         this.insurance = p.getInsurance();

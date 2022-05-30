@@ -36,7 +36,7 @@ public class PatientController {
                 patientDTO.firstName,
                 patientDTO.lastName,
                 patientDTO.idNumber,
-                LocalDate.parse(patientDTO.dateOfBirth, Utils.MadarskyDateFormatter),
+                LocalDate.parse(patientDTO.dateOfBirth, Utils.EuropeanDateFormatter),
                 patientDTO.sex,
                 patientDTO.telephoneNumber,
                 patientDTO.emailAddrs,
@@ -76,7 +76,7 @@ public class PatientController {
         patient.setFirstName(newPatientDTO.firstName);
         patient.setLastName(newPatientDTO.lastName);
         patient.setIdNumber(newPatientDTO.idNumber);
-        patient.setDateOfBirth(LocalDate.parse(newPatientDTO.dateOfBirth, Utils.MadarskyDateFormatter));
+        patient.setDateOfBirth(LocalDate.parse(newPatientDTO.dateOfBirth, Utils.EuropeanDateFormatter));
         patient.setSex(newPatientDTO.sex);
         patient.setTelephoneNumber(newPatientDTO.telephoneNumber);
         patient.setEmailAddrs(newPatientDTO.emailAddrs);
