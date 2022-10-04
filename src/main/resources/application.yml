@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/evacc
+    username: admin
+    password: admin123
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+
+keycloak:
+  auth-server-url: http://localhost:9900/auth
+  realm: your-project
+  resource: be-app
+  public-client: true
+
+logging:
+  level:
+    org.springframework: DEBUG
