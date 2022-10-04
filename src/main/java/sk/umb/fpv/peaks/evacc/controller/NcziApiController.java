@@ -2,8 +2,8 @@ package sk.umb.fpv.peaks.evacc.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sk.umb.fpv.peaks.evacc.controller.dto.*;
-import sk.umb.fpv.peaks.evacc.service.NcziApiService;
+import sk.umb.fpv.peaks.evacc.service.api.service.NcziApiService;
+import sk.umb.fpv.peaks.evacc.service.api.dto.*;
 
 @RestController
 public class NcziApiController {

@@ -1,11 +1,11 @@
-package sk.umb.fpv.peaks.evacc.service;
+package sk.umb.fpv.peaks.evacc.service.api.service;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import sk.umb.fpv.peaks.evacc.controller.dto.NcziPatientsDTO;
-import sk.umb.fpv.peaks.evacc.controller.dto.NcziPositiveDTO;
-import sk.umb.fpv.peaks.evacc.controller.dto.NcziVaccinesDTO;
+import sk.umb.fpv.peaks.evacc.service.api.dto.NcziPatientsDTO;
+import sk.umb.fpv.peaks.evacc.service.api.dto.NcziPositiveDTO;
+import sk.umb.fpv.peaks.evacc.service.api.dto.NcziVaccinesDTO;
 
 @Service
 public class NcziApiService {

@@ -1,21 +1,11 @@
 package sk.umb.fpv.peaks.evacc.domain.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-import javax.persistence.Entity;
-
-@Entity
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "evacc_patient")
-public class Patient extends UuidDomainObject {
+public class PatientResource {
 
     private String firstName;
 
@@ -23,7 +13,7 @@ public class Patient extends UuidDomainObject {
 
     private String idNumber;
 
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     private String sex;
 
@@ -33,6 +23,5 @@ public class Patient extends UuidDomainObject {
 
     private String insurance;
 
-    @OneToOne
     private PatientAddressInfo addressInfo;
 }

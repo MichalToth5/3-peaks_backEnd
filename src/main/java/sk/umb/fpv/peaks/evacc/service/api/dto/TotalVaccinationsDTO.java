@@ -1,4 +1,4 @@
-package sk.umb.fpv.peaks.evacc.controller.dto;
+package sk.umb.fpv.peaks.evacc.service.api.dto;
 
 public class TotalVaccinationsDTO {
 

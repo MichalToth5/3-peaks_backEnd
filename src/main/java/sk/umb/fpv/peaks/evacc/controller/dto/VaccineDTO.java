@@ -8,7 +8,7 @@ public class VaccineDTO {
     }
 
     public VaccineDTO(Vaccine vaccine) {
-        this.id = vaccine.getId();
+//        this.id = vaccine.getId();
         this.name = vaccine.getName();
         this.type = vaccine.getType();
         this.manufacturer = vaccine.getManufacturer();

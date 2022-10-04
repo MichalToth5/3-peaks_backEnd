@@ -1,4 +1,4 @@
-package sk.umb.fpv.peaks.evacc.controller.dto;
+package sk.umb.fpv.peaks.evacc.service.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NcziVaccinesDTO implements Serializable {
+public class NcziPositiveDTO implements Serializable {
 
     public boolean success;
     public String next_offset;
 
-    public List<NcziVaccinesPageDTO> page;
+    public List<NcziPositivePageDTO> page;
 
 }

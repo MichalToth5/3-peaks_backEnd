@@ -1,12 +1,17 @@
 package sk.umb.fpv.peaks.evacc.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.controller.dto.PageCountDTO;
 import sk.umb.fpv.peaks.evacc.controller.dto.PatientDTO;
+import sk.umb.fpv.peaks.evacc.controller.mapper.PatientMapper;
 import sk.umb.fpv.peaks.evacc.domain.model.Patient;
 import sk.umb.fpv.peaks.evacc.common.Utils;
+import sk.umb.fpv.peaks.evacc.domain.model.PatientRequest;
+import sk.umb.fpv.peaks.evacc.domain.model.PatientResource;
 import sk.umb.fpv.peaks.evacc.service.PatientService;
 
 import javax.transaction.Transactional;
@@ -15,63 +20,57 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RestController
+@Slf4j
 public class PatientController {
 
-    private PatientService service;
-    public PatientController(PatientService service) {
-        this.service = service;
+    private PatientService patientService;
+    private PatientMapper patientMapper;
+    @Autowired
+    public void setPatientService(PatientService patientService) {
+        this.patientService = patientService;
     }
-
+    @Autowired
+    public void setPatientMapper(PatientMapper patientMapper) {
+        this.patientMapper = patientMapper;
+    }
     @PostMapping("/api/patient")
-    public PatientDTO addPatient(@RequestBody PatientDTO patientDTO){
-        Patient patient = service.addPatient(
-                patientDTO.firstName,
-                patientDTO.lastName,
-                patientDTO.idNumber,
-                LocalDate.parse(patientDTO.dateOfBirth, Utils.EuropeanDateFormatter),
-                patientDTO.sex,
-                patientDTO.telephoneNumber,
-                patientDTO.emailAddrs,
-                patientDTO.insurance,
-                patientDTO.street,
-                patientDTO.houseNumber,
-                patientDTO.postCode,
-                patientDTO.city,
-                patientDTO.country
-        );
-        patientDTO.id = patient.getId();
-        return patientDTO;
+    public PatientResource createPatient(@RequestBody PatientRequest request){
+        log.debug("createPatient from request: {}", request);
+
+        PatientResource patientResource = patientMapper.requestToResource(request);
+        patientService.createPatient(patientResource);
+        return patientResource;
     }
 
     @GetMapping("/api/patient")
-    public Iterable<PatientDTO> getPatients(@RequestParam(defaultValue = "0") Integer page){
+    public List<PatientDTO> getPatients(@RequestParam Integer page, @RequestParam Integer size){
+        log.debug("getPatients()");
+
         List<PatientDTO> patientDTOList = new ArrayList<>();
-        Page<Patient> patients = service.getPatients(page);
-        for (Patient p : patients){
-            PatientDTO patientDTO = new PatientDTO(p);
-            patientDTOList.add(patientDTO);
-        }
+        patientService.getAllPatients(page, size)
+                .forEach(patient -> patientDTOList.add(patientMapper.patientToDto(patient)));
         return patientDTOList;
     }
 
     @GetMapping("/api/patient/{patientId}")
-    public PatientDTO getPatientById(@PathVariable long patientId){
-        Patient patient = service.getPatientById(patientId);
-        PatientDTO patientDTO = new PatientDTO(patient);
-        return patientDTO;
-    }
-    @Transactional
-    @PutMapping("/api/patient/{patientId}")
-    public PatientDTO updatePatientById(@PathVariable long patientId, @RequestBody  PatientDTO newPatientDTO){
-        Patient patient = service.getPatientById(patientId);
+    public PatientDTO getPatientById(@PathVariable UUID patientId){
+        log.debug("getPatient by id: {}", patientId);
 
+        Patient patient = patientService.getPatientById(patientId);
+        return patientMapper.patientToDto(patient);
+    }
+    @PutMapping("/api/patient/{patientId}")
+    public PatientDTO updatePatientById(@PathVariable UUID patientId, @RequestBody  PatientRequest request){
+        log.debug("updatePatient by id: {}, request: {}", patientId, request);
+
+        Patient patientToUpdate = patientService.getPatientById(patientId);
         patient.setFirstName(newPatientDTO.firstName);
         patient.setLastName(newPatientDTO.lastName);
         patient.setIdNumber(newPatientDTO.idNumber);
         patient.setDateOfBirth(LocalDate.parse(newPatientDTO.dateOfBirth, Utils.EuropeanDateFormatter));
         patient.setSex(newPatientDTO.sex);
         patient.setTelephoneNumber(newPatientDTO.telephoneNumber);
-        patient.setEmailAddrs(newPatientDTO.emailAddrs);
+        patient.setEmailAddress(newPatientDTO.emailAddress);
         patient.setInsurance(newPatientDTO.insurance);
         patient.setStreet(newPatientDTO.street);
         patient.setHouseNumber(newPatientDTO.houseNumber);
@@ -84,12 +83,12 @@ public class PatientController {
     @Transactional
     @DeleteMapping("/api/patient/{patientId}")
     public  void deletePatientById(@PathVariable long patientId){
-        service.deletePatientById(patientId);
+        patientService.deletePatientById(patientId);
     }
 
     @GetMapping("/api/patient/search")
     public Iterable<PatientDTO> searchPatients(@RequestParam String search){
-        Iterable<Patient> patientList = service.searchPatients(search);
+        Iterable<Patient> patientList = patientService.searchPatients(search);
         List<PatientDTO> patientDTOList = new ArrayList<>();
         for(Patient p : patientList){
             PatientDTO patientDTO = new PatientDTO(p);
@@ -114,7 +113,7 @@ public class PatientController {
     @GetMapping("/api/patient/pageCount")
     public PageCountDTO getPagesCount(){
         PageCountDTO pageCountDTO = new PageCountDTO();
-        pageCountDTO.setPageCount(service.getPageCount());
+        pageCountDTO.setPageCount(patientService.getPageCount());
         return pageCountDTO;
     }
 }
