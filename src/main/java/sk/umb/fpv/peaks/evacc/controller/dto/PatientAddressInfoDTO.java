@@ -9,17 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VaccineDTO {
+public class PatientAddressInfoDTO {
 
-    public String name;
+    private String street;
 
-    public String type;
+    private String houseNumber;
 
-    public String manufacturer;
+    private String postCode;
 
-    public Integer nextShotInDays;
+    private String city;
 
-    public Integer minAge;
-
-    public Integer maxAge;
+    private String country;
 }

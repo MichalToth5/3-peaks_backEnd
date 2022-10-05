@@ -2,23 +2,17 @@ package sk.umb.fpv.peaks.evacc.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sk.umb.fpv.peaks.evacc.controller.dto.PatientDTO;
 import sk.umb.fpv.peaks.evacc.controller.mapper.PatientMapper;
 import sk.umb.fpv.peaks.evacc.domain.model.Patient;
-import sk.umb.fpv.peaks.evacc.domain.model.PatientRequest;
-import sk.umb.fpv.peaks.evacc.domain.model.PatientResource;
 import sk.umb.fpv.peaks.evacc.domain.repository.PatientRepository;
+import sk.umb.fpv.peaks.evacc.service.exceptions.PatientAlreadyExists;
 import sk.umb.fpv.peaks.evacc.service.exceptions.PatientNotFoundException;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.Math.round;
@@ -39,12 +33,16 @@ public class PatientService {
         this.patientMapper = patientMapper;
     }
 
-    public Patient createPatient(PatientResource resource){
-        log.debug("createPatient from request: {}", resource);
+    public Patient createPatient(Patient patient){
+        log.debug("createPatient from request: {}", patient);
 
-        Patient patient = patientMapper.resourceToPatient(resource);
+        Patient p = patientRepository.findByIdNumber(patient.getIdNumber());
+        if(p != null){
+            throw new PatientAlreadyExists("Patient with id number: " + patient.getIdNumber() + " already exists!");
+        }
         return patientRepository.save(patient);
     }
+
     @Transactional
     public List<Patient> getAllPatients(Integer page, Integer size){
         log.debug("getAllPatients()");
@@ -60,13 +58,13 @@ public class PatientService {
                .orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found!"));
     }
     @Transactional
-    public Patient updatePatient(UUID patientId, PatientResource resource){
-        log.debug("getPatient by id: {}", patientId);
+    public Patient updatePatient(UUID patientId, Patient patientToUpdate){
+        log.debug("updatePatient with id: {}, with update: {}", patientId, patientToUpdate);
 
-        Patient patientToUpdate = this.getPatientById(patientId);
-        if(patientToUpdate != null){
-            patientToUpdate = patientMapper.resourceToPatient(resource);
-            return patientRepository.save(patientToUpdate);
+        Patient patient = this.getPatientById(patientId);
+        if(patient != null){
+            update(patient, patientToUpdate);
+            return patient;
         }
         throw new PatientNotFoundException("Patient with id " + patientId + " not found!");
     }
@@ -77,16 +75,31 @@ public class PatientService {
         patientRepository.deleteById(patientId);
     }
 
-    public Iterable<Patient> searchPatients(String search){
-        if(search != null){
-            return patientRepository.searchIgnoreCase(search);
-        }
-        return patientRepository.findAll();
-    }
+//    public Iterable<Patient> searchPatients(String search){
+//        log.debug("search: {}", search);
+//
+//        if(search != null){
+//            return patientRepository.searchIgnoreCase(search);
+//        }
+//        return patientRepository.findAll();
+//    }
 
     public long getPageCount(){
         long pageCount = patientRepository.count();
         return round((float)pageCount / 10.0);
+    }
+
+    private Patient update(Patient original, Patient updated){
+        original.setFirstName(updated.getFirstName());
+        original.setLastName(updated.getLastName());
+        original.setIdNumber(updated.getIdNumber());
+        original.setDateOfBirth(updated.getDateOfBirth());
+        original.setSex(updated.getSex());
+        original.setTelephoneNumber(updated.getTelephoneNumber());
+        original.setEmailAddress(updated.getEmailAddress());
+        original.setInsurance(updated.getInsurance());
+        original.setAddressInfo(updated.getAddressInfo());
+        return original;
     }
 }
 

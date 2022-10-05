@@ -2,21 +2,13 @@ package sk.umb.fpv.peaks.evacc.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.controller.dto.PageCountDTO;
 import sk.umb.fpv.peaks.evacc.controller.dto.PatientDTO;
 import sk.umb.fpv.peaks.evacc.controller.mapper.PatientMapper;
 import sk.umb.fpv.peaks.evacc.domain.model.Patient;
-import sk.umb.fpv.peaks.evacc.common.Utils;
-import sk.umb.fpv.peaks.evacc.domain.model.PatientRequest;
-import sk.umb.fpv.peaks.evacc.domain.model.PatientResource;
 import sk.umb.fpv.peaks.evacc.service.PatientService;
 
-import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -34,12 +26,10 @@ public class PatientController {
         this.patientMapper = patientMapper;
     }
     @PostMapping("/api/patient")
-    public PatientResource createPatient(@RequestBody PatientRequest request){
-        log.debug("createPatient from request: {}", request);
+    public Patient createPatient(@RequestBody PatientDTO patientDTO){
+        log.debug("createPatient from dto: {}", patientDTO);
 
-        PatientResource patientResource = patientMapper.requestToResource(request);
-        patientService.createPatient(patientResource);
-        return patientResource;
+        return patientService.createPatient(patientMapper.dtoToEntity(patientDTO));
     }
 
     @GetMapping("/api/patient")
@@ -48,7 +38,7 @@ public class PatientController {
 
         List<PatientDTO> patientDTOList = new ArrayList<>();
         patientService.getAllPatients(page, size)
-                .forEach(patient -> patientDTOList.add(patientMapper.patientToDto(patient)));
+                .forEach(patient -> patientDTOList.add(patientMapper.entityToDto(patient)));
         return patientDTOList;
     }
 
@@ -56,59 +46,41 @@ public class PatientController {
     public PatientDTO getPatientById(@PathVariable UUID patientId){
         log.debug("getPatient by id: {}", patientId);
 
-        Patient patient = patientService.getPatientById(patientId);
-        return patientMapper.patientToDto(patient);
+        return patientMapper.entityToDto(patientService.getPatientById(patientId));
     }
     @PutMapping("/api/patient/{patientId}")
-    public PatientDTO updatePatientById(@PathVariable UUID patientId, @RequestBody  PatientRequest request){
-        log.debug("updatePatient by id: {}, request: {}", patientId, request);
+    public PatientDTO updatePatientById(@PathVariable UUID patientId, @RequestBody  PatientDTO dto){
+        log.debug("updatePatient by id: {}, from dto: {}", patientId, dto);
 
-        Patient patientToUpdate = patientService.getPatientById(patientId);
-        patient.setFirstName(newPatientDTO.firstName);
-        patient.setLastName(newPatientDTO.lastName);
-        patient.setIdNumber(newPatientDTO.idNumber);
-        patient.setDateOfBirth(LocalDate.parse(newPatientDTO.dateOfBirth, Utils.EuropeanDateFormatter));
-        patient.setSex(newPatientDTO.sex);
-        patient.setTelephoneNumber(newPatientDTO.telephoneNumber);
-        patient.setEmailAddress(newPatientDTO.emailAddress);
-        patient.setInsurance(newPatientDTO.insurance);
-        patient.setStreet(newPatientDTO.street);
-        patient.setHouseNumber(newPatientDTO.houseNumber);
-        patient.setPostCode(newPatientDTO.postCode);
-        patient.setCity(newPatientDTO.city);
-        patient.setCountry(newPatientDTO.country);
-        service.updatePatientById(patientId, patient);
-        return newPatientDTO;
+        return patientMapper.entityToDto(patientService.updatePatient(patientId, patientMapper.dtoToEntity(dto)));
     }
-    @Transactional
     @DeleteMapping("/api/patient/{patientId}")
-    public  void deletePatientById(@PathVariable long patientId){
+    public  void deletePatientById(@PathVariable UUID patientId){
+        log.debug("deletePatient by id: {}", patientId);
+
         patientService.deletePatientById(patientId);
     }
 
-    @GetMapping("/api/patient/search")
-    public Iterable<PatientDTO> searchPatients(@RequestParam String search){
-        Iterable<Patient> patientList = patientService.searchPatients(search);
-        List<PatientDTO> patientDTOList = new ArrayList<>();
-        for(Patient p : patientList){
-            PatientDTO patientDTO = new PatientDTO(p);
-            patientDTOList.add(patientDTO);
-        }
-        return patientDTOList;
-    }
+//    @GetMapping("/api/patient/search")
+//    public Iterable<PatientDTO> searchPatients(@RequestParam String search){
+//        List<PatientDTO> patientDTOList = new ArrayList<>();
+//        patientService.searchPatients(search)
+//                .forEach(patient -> patientDTOList.add(patientMapper.patientToDto(patient)));
+//        return patientDTOList;
+//    }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public Map<String, String> handleValidationExceptions(
-            ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach((error) -> {
-            String fieldName = error.getPropertyPath().toString();
-            String errorMessage = error.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public Map<String, String> handleValidationExceptions(
+//            ConstraintViolationException ex) {
+//        Map<String, String> errors = new HashMap<>();
+//        ex.getConstraintViolations().forEach((error) -> {
+//            String fieldName = error.getPropertyPath().toString();
+//            String errorMessage = error.getMessage();
+//            errors.put(fieldName, errorMessage);
+//        });
+//        return errors;
+//    }
 
     @GetMapping("/api/patient/pageCount")
     public PageCountDTO getPagesCount(){

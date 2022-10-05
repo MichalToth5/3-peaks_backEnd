@@ -1,99 +1,82 @@
 package sk.umb.fpv.peaks.evacc.controller;
 
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sk.umb.fpv.peaks.evacc.controller.dto.VaccineDTO;
+import sk.umb.fpv.peaks.evacc.controller.mapper.VaccineMapper;
 import sk.umb.fpv.peaks.evacc.domain.model.Vaccine;
 import sk.umb.fpv.peaks.evacc.service.VaccineService;
 
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
+@Slf4j
 public class VaccineController {
 
-    private VaccineService service;
-    public VaccineController(VaccineService service) {
-        this.service = service;
+    private VaccineService vaccineService;
+
+    private VaccineMapper vaccineMapper;
+
+    @Autowired
+    public void setVaccineService(VaccineService vaccineService) {
+        this.vaccineService = vaccineService;
+    }
+
+    @Autowired
+    public void setVaccineMapper(VaccineMapper vaccineMapper) {
+        this.vaccineMapper = vaccineMapper;
     }
 
     @PostMapping("/api/vaccine")
-    public VaccineDTO addVaccine(@RequestBody VaccineDTO vaccineDTO){
-        Vaccine vaccine = service.addVaccine(
-                vaccineDTO.name,
-                vaccineDTO.type,
-                vaccineDTO.manufacturer,
-                vaccineDTO.nextShotInDays,
-                vaccineDTO.minAge,
-                vaccineDTO.maxAge
-        );
-        vaccineDTO.id = vaccine.getId();
-        return vaccineDTO;
+    public Vaccine createVaccine(@RequestBody VaccineDTO vaccineDTO) {
+        log.debug("createVaccine from dto: {}", vaccineDTO);
+
+        return vaccineService.createVaccine(vaccineMapper.dtoToEntity(vaccineDTO));
     }
 
     @GetMapping("/api/vaccine")
-    public List<VaccineDTO> getVaccines(){
+    public List<VaccineDTO> getVaccines(@RequestParam Integer page, @RequestParam Integer size) {
+        log.debug("getVaccines()");
+
         List<VaccineDTO> vaccineDTOList = new ArrayList<>();
-        List<Vaccine> vaccines = service.getVaccines();
-        for(Vaccine v : vaccines){
-            VaccineDTO vaccineDTO = new VaccineDTO();
-            vaccineDTO.id = v.getId();
-            vaccineDTO.name = v.getName();
-            vaccineDTO.type = v.getType();
-            vaccineDTO.manufacturer = v.getManufacturer();
-            vaccineDTO.nextShotInDays = v.getNextShotInDays();
-            vaccineDTO.minAge = v.getMinAge();
-            vaccineDTO.maxAge = v.getMaxAge();
-            vaccineDTOList.add(vaccineDTO);
-        }
+        vaccineService.getAllVaccines(page, size)
+                .forEach(vaccine -> vaccineDTOList.add(vaccineMapper.entityToDto(vaccine)));
         return vaccineDTOList;
     }
 
     @GetMapping("/api/vaccine/{vaccineId}")
-    public VaccineDTO getVaccineById(@PathVariable long vaccineId){
-        VaccineDTO vaccineDTO = new VaccineDTO();
-        Vaccine vaccine = service.getVaccineById(vaccineId);
-        vaccineDTO.id = vaccine.getId();
-        vaccineDTO.name = vaccine.getName();
-        vaccineDTO.type = vaccine.getType();
-        vaccineDTO.manufacturer = vaccine.getManufacturer();
-        vaccineDTO.nextShotInDays = vaccine.getNextShotInDays();
-        vaccineDTO.minAge =vaccine.getMinAge();
-        vaccineDTO.maxAge =vaccine.getMaxAge();
-        return vaccineDTO;
+    public VaccineDTO getVaccineById(@PathVariable UUID vaccineId) {
+        log.debug("getVaccine by id: {}", vaccineId);
+
+        return vaccineMapper.entityToDto(vaccineService.getVaccineById(vaccineId));
     }
 
     @PutMapping("/api/vaccine/{vaccineId}")
-    public VaccineDTO updateVaccineById(@PathVariable  long vaccineId, @RequestBody VaccineDTO newVaccineDTO){
-        Vaccine vaccine = service.getVaccineById(vaccineId);
-        vaccine.setName(newVaccineDTO.name);
-        vaccine.setType(newVaccineDTO.type);
-        vaccine.setManufacturer(newVaccineDTO.manufacturer);
-        vaccine.setNextShotInDays(newVaccineDTO.nextShotInDays);
-        vaccine.setMinAge(newVaccineDTO.minAge);
-        vaccine.setMaxAge(newVaccineDTO.maxAge);
-        service.updateVaccineById(vaccineId, vaccine);
-        return newVaccineDTO;
+    public VaccineDTO updateVaccineById(@PathVariable UUID vaccineId, @RequestBody VaccineDTO dto) {
+        log.debug("updateVaccine by id: {}, from dto: {}", vaccineId, dto);
+
+        return vaccineMapper.entityToDto(vaccineService.updateVaccine(vaccineId, vaccineMapper.dtoToEntity(dto)));
     }
 
     @DeleteMapping("/api/vaccine/{vaccineId}")
-    public void deleteVaccineById(@PathVariable long vaccineId){
-        service.deleteVaccineById(vaccineId);
+    public void deleteVaccineById(@PathVariable UUID vaccineId) {
+        log.debug("deleteVaccine by id: {}", vaccineId);
+
+        vaccineService.deleteVaccineById(vaccineId);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public Map<String, String> handleValidationExceptions(
-            ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach((error) -> {
-            String fieldName = error.getPropertyPath().toString();
-            String errorMessage = error.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
+
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public Map<String, String> handleValidationExceptions(
+//            ConstraintViolationException ex) {
+//        Map<String, String> errors = new HashMap<>();
+//        ex.getConstraintViolations().forEach((error) -> {
+//            String fieldName = error.getPropertyPath().toString();
+//            String errorMessage = error.getMessage();
+//            errors.put(fieldName, errorMessage);
+//        });
+//        return errors;
+//    }
 }

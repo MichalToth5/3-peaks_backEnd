@@ -1,58 +1,88 @@
 package sk.umb.fpv.peaks.evacc.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import sk.umb.fpv.peaks.evacc.controller.dto.VaccineDTO;
+import sk.umb.fpv.peaks.evacc.controller.mapper.VaccineMapper;
 import sk.umb.fpv.peaks.evacc.domain.model.Vaccine;
 import sk.umb.fpv.peaks.evacc.domain.repository.VaccineRepository;
+import sk.umb.fpv.peaks.evacc.service.exceptions.VaccineAlreadyExists;
+import sk.umb.fpv.peaks.evacc.service.exceptions.VaccineNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class VaccineService {
 
-    private VaccineRepository repository;
-    public VaccineService(VaccineRepository repository) {
-        this.repository = repository;
+    private VaccineRepository vaccineRepository;
+
+    private VaccineMapper vaccineMapper;
+    @Autowired
+    public void setVaccineRepository(VaccineRepository vaccineRepository) {
+        this.vaccineRepository = vaccineRepository;
     }
-    /*vytvorenie vakciny*/
-    public Vaccine addVaccine(String name,
-                                    String type,
-                                    String manufacturer,
-                                    int nexShotInDays,
-                                    int minAge,
-                                    int maxAge){
-        Vaccine vaccine = new Vaccine(name, type, manufacturer, nexShotInDays, minAge, maxAge);
-        return repository.save(vaccine);
+    @Autowired
+    public void setVaccineMapper(VaccineMapper vaccineMapper) {
+        this.vaccineMapper = vaccineMapper;
     }
-    /*vsetky vakciny*/
-    public List<Vaccine> getVaccines(){
-        return repository.findAll();
+
+    @Transactional
+    public Vaccine createVaccine(Vaccine vaccine){
+        log.debug("createVaccine from request: {}", vaccine);
+
+        Vaccine v = vaccineRepository.findByName(vaccine.getName());
+        if(v != null){
+            throw new VaccineAlreadyExists("Vaccine with name: " + vaccine.getName() + " already exists!");
+        }
+        return vaccineRepository.save(vaccine);
     }
-    /*vakciny podla id*/
-    public Vaccine getVaccineById(long vaccineId){
-        Optional<Vaccine> optionalVaccine = repository.findById(vaccineId);
-        return optionalVaccine.orElse(null);
+
+    @Transactional
+    public List<Vaccine> getAllVaccines(Integer page, Integer size){
+        log.debug("getAllVaccines()");
+
+        return vaccineRepository.findAll(PageRequest.of(page, size)).toList();
     }
-    /*update vakciny*/
-    public Vaccine updateVaccineById(long vaccineId, Vaccine newVaccine){
+
+    @Transactional
+    public Vaccine getVaccineById(UUID vaccineId){
+        log.debug("getVaccine by id: {}", vaccineId);
+
+        return vaccineRepository.findById(vaccineId)
+                .orElseThrow(() -> new VaccineNotFoundException("Vaccine with id " + vaccineId + " not found!"));
+    }
+
+    @Transactional
+    public Vaccine updateVaccine(UUID vaccineId, Vaccine vaccineToUpdate){
+        log.debug("updateVaccine with id: {}, with update: {}", vaccineId, vaccineToUpdate);
+
         Vaccine vaccine = this.getVaccineById(vaccineId);
         if(vaccine != null){
-            vaccine.setName(newVaccine.getName());
-            vaccine.setType(newVaccine.getType());
-            vaccine.setManufacturer(newVaccine.getManufacturer());
-            vaccine.setNextShotInDays(newVaccine.getNextShotInDays());
-            vaccine.setMinAge(newVaccine.getMinAge());
-            vaccine.setMaxAge(newVaccine.getMaxAge());
-            return repository.save(vaccine);
+            update(vaccine, vaccineToUpdate);
+            return vaccine;
         }
-        return null;
-    }
-    /*vymazanie vakciny*/
-    public void deleteVaccineById(long vaccineId){
-        repository.deleteById(vaccineId);
+        throw new VaccineNotFoundException("Vaccine with id " + vaccineId + " not found!");
     }
 
+    @Transactional
+    public void deleteVaccineById(UUID vaccineId){
+        log.debug("deleteVaccine by id: {}", vaccineId);
 
+        vaccineRepository.deleteById(vaccineId);
+    }
 
-
+    private Vaccine update(Vaccine original, Vaccine updated){
+       original.setManufacturer(updated.getManufacturer());
+       original.setMaxAge(updated.getMaxAge());
+       original.setMinAge(updated.getMinAge());
+       original.setName(updated.getName());
+       original.setType(updated.getType());
+       original.setNextShotInDays(updated.getNextShotInDays());
+       return original;
+    }
 }

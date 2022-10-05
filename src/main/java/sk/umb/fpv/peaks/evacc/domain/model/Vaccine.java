@@ -22,7 +22,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "evacc_vaccine")
 public class Vaccine extends UuidDomainObject {
 
-
     private String name;
 
     private String type;
@@ -34,4 +33,5 @@ public class Vaccine extends UuidDomainObject {
     private Integer minAge;
 
     private Integer maxAge;
+
 }

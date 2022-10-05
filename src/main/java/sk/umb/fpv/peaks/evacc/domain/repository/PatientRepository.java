@@ -11,5 +11,8 @@ import java.util.UUID;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, UUID>, PagingAndSortingRepository<Patient, UUID> {
 
-    public List<Patient> searchIgnoreCase(String search);
+    //TODO query by name
+//    List<Patient> searchIgnoreCase(String search);
+
+    Patient findByIdNumber(String idNumber);
 }

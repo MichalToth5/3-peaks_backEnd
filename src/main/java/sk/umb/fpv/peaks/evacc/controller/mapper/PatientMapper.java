@@ -1,20 +1,23 @@
 package sk.umb.fpv.peaks.evacc.controller.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import sk.umb.fpv.peaks.evacc.controller.dto.PatientAddressInfoDTO;
 import sk.umb.fpv.peaks.evacc.controller.dto.PatientDTO;
 import sk.umb.fpv.peaks.evacc.domain.model.Patient;
-import sk.umb.fpv.peaks.evacc.domain.model.PatientRequest;
-import sk.umb.fpv.peaks.evacc.domain.model.PatientResource;
+import sk.umb.fpv.peaks.evacc.domain.model.PatientAddressInfo;
 
-@Mapper(componentModel = "spring")
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Mapper(componentModel = "spring", imports = {DateTimeFormatter.class, LocalDate.class, LocalDateTime.class})
 public abstract class PatientMapper {
 
-    public abstract PatientResource requestToResource(PatientRequest request);
+    @Mapping(target = "dateOfBirth", expression = "java(LocalDate.parse(dto.getDateOfBirth(), DateTimeFormatter.ISO_LOCAL_DATE))")
+    @Mapping(target = "addressInfo", expression ="java(this.addressInfoDtoToEntity(dto.getAddressInfo()))")
+    public abstract Patient dtoToEntity(PatientDTO dto);
+    public abstract PatientAddressInfo addressInfoDtoToEntity(PatientAddressInfoDTO dto);
 
-    public abstract PatientDTO resourceToDto(PatientResource resource);
-
-    public abstract Patient dtoToPatient(PatientDTO dto);
-    public abstract Patient resourceToPatient(PatientResource resource);
-
-    public abstract PatientDTO patientToDto(Patient patient);
+    public abstract PatientDTO entityToDto(Patient patient);
 }
