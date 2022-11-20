@@ -1,6 +1,14 @@
 version: "3.3"
 
 services:
+  application:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - library
+      - keycloak
   library:
     restart: always
     image: sameersbn/postgresql:10-2
@@ -17,6 +25,7 @@ services:
       - data:/var/lib/postgresql
       - logs:/var/log/postgresql
   keycloak:
+    restart: always
     image: jboss/keycloak:${KEYCLOAK_VERSION}
     ports:
       - "9900:8080"

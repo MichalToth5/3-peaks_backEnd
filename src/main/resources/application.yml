@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/evacc
+    url: jdbc:postgresql://library:5432/evacc
     username: admin
     password: admin123
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -14,7 +14,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
 
 keycloak:
-  auth-server-url: http://localhost:9900/auth
+  auth-server-url: http://keycloak:9900/auth
   realm: your-project
   resource: be-app
   public-client: true
